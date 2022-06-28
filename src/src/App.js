@@ -34,6 +34,7 @@ const MovableItem = ({ name, setItems }) => {
         return {
           //{ id: 1, name: 'Item 1', column: 'Column 1' }
           //Itemの中身それぞれに対して
+          //...はスプレットオペレータと呼ばれる演算子
           ...e,
           column: e.name === currentItem.name ? columnName : e.column,
         }
@@ -45,7 +46,8 @@ const MovableItem = ({ name, setItems }) => {
 
   const [{ isDragging }, drag] = useDrag({
     //v14より仕様が変わりtypeプロパティをitemの外に出す必要が出てきた。
-    type: 'Our first type',
+    type: 'OurFirstType',
+    item: { name },
     //drop:(item,monitor)・・・互換性のあるアイテムがドロップされた際に呼び出される。
     //undefinedかプレーンオブジェクトが返される。
     end: (item, monitor) => {
@@ -53,8 +55,7 @@ const MovableItem = ({ name, setItems }) => {
       //オブジェクトが返すときにドラッグ終わりのドラッグソースをgetDropResultとして使用できる。
       //getDropResultはドロップターゲットがアイテムを受け取った際に使用する。
       if (dropResult && dropResult.name === 'Column 1') {
-        //item・・・div要素を以下を返すコンポーネント
-        changeItemColumn(item, 'Column 1')
+        changeItemColumn(item, 'Column 1') //移動先のカラム名
       } else {
         changeItemColumn(item, 'Column 2')
       }
@@ -79,8 +80,7 @@ const MovableItem = ({ name, setItems }) => {
 const Column = ({ children, className, title }) => {
 
   const [, drop] = useDrop({
-    //
-    accept: 'Our first type',
+    accept: 'OurFirstType',
     drop: () => ({ name: title }),
   });
 
